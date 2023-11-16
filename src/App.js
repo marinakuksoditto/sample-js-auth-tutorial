@@ -3,6 +3,8 @@ import './App.css';
 import Ditto from "./ditto"
 import { useAuth0 } from "@auth0/auth0-react"
 
+const domain = "YOUR_AUTH0_DOMAIN_HERE";
+
 let ditto
 function App() {
   const { user, loginWithRedirect, getAccessTokenSilently, isAuthenticated, logout } = useAuth0()
@@ -11,23 +13,30 @@ function App() {
 
   useEffect(() => {
     let liveQuery
-    async function startDitto() {
-      ditto = Ditto()
-      liveQuery = ditto.store
-        .collection('cars')
+    async function refreshToken () {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://${domain}/api/v2/`,
+        scope: "read:current_user",
+      });
+
+      ditto = Ditto(accessToken)
+      liveQuery = ditto.store.collection('cars')
         .findAll()
         .observeLocal((tickets) => {
           setCars(tickets.length)
         })
     }
-    startDitto() 
+
+    if (user) {
+      refreshToken()
+    }
     return () => {
       liveQuery?.stop()
     }
-  }, []);
+  }, [user, getAccessTokenSilently]);
 
   function onAddClick (){
-    if (!ditto) return setError('No Ditto.')
+    if (!ditto || !user) return setError('You must log in first.')
     setError('')
     ditto.store.collection('cars').upsert({
       "name": 'Toyota'
