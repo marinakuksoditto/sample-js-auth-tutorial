@@ -43,6 +43,13 @@ function App() {
     })
   }
 
+  function onLogoutClick() {
+    ditto.auth.logout(() => {
+      ditto.store.collection('cars').findAll().evict()
+    })
+    logout({ returnTo: window.location.origin })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -52,6 +59,11 @@ function App() {
             <img src={user.picture} alt={user.name} />
             <h2>{user.name}</h2>
             <p>{user.email}</p>
+
+            <button onClick={onLogoutClick}>
+              Log Out
+            </button>
+
           </div>
         }
         <div>
