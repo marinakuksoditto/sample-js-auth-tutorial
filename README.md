@@ -1,6 +1,6 @@
 # Ditto Tutorial: Online with Authentication in React
 
-This code goes with the blog post [Ditto Tutorial: Online with Authentication in React](INSERT_URL_HERE).
+This code goes with the blog post [Ditto Tutorial: Online with Authentication in React](https://ditto.live/blog/js-react-auth-tutorial).
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
